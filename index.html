@@ -752,6 +752,48 @@
 }
 </style>
 
+
+<style id="image-responsive-fix">
+/* ═══════════════════════════════════
+   MAKE ALL IMAGES RESPONSIVE
+═══════════════════════════════════ */
+img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+/* Fix any inline width/height on img tags */
+.chapter-header img,
+.feature-card img,
+.two-col img,
+section img,
+div img {
+  max-width: 100% !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+@media (max-width: 768px) {
+  img {
+    max-width: 100% !important;
+    width: auto !important;
+    height: auto !important;
+  }
+  
+  /* Stack two-column layouts with images */
+  .two-col {
+    flex-direction: column !important;
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Ensure image containers don't overflow */
+  [style*="width"] img {
+    max-width: 100% !important;
+  }
+}
+</style>
+
 </head>
 <body>
 
