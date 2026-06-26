@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Power of One — POLAR3 Campaign Book</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -686,6 +686,72 @@
 }
 
 </style>
+
+<style id="mobile-responsive">
+/* ═══════════════════════════════════
+   MOBILE & RESPONSIVE FIXES
+   Makes content fill any screen width
+═══════════════════════════════════ */
+
+/* All sections fill full viewport width */
+.cover,
+.chapter-divider,
+.dark-band,
+.section,
+.section-full,
+.internal-page {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Inner content containers */
+.cover > div,
+.section-full > div,
+.dark-band > div {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Reduce padding on small screens */
+@media (max-width: 768px) {
+  .section, .section-full {
+    padding: 48px 24px !important;
+  }
+  .cover {
+    padding: 40px 24px !important;
+  }
+  .chapter-divider {
+    padding: 60px 24px !important;
+  }
+  
+  /* Stack grids vertically on mobile */
+  .stat-grid,
+  .feature-grid,
+  .evidence-grid,
+  .one-grid,
+  .two-col {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Scale down large fonts */
+  .cover-title {
+    font-size: clamp(48px, 15vw, 120px) !important;
+  }
+  .chapter-divider span {
+    font-size: clamp(36px, 12vw, 96px) !important;
+  }
+  
+  /* Cover meta — stack vertically */
+  .cover-meta {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 
