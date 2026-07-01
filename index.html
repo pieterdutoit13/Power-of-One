@@ -687,112 +687,103 @@
 
 </style>
 
-<style id="mobile-responsive">
-/* ═══════════════════════════════════
-   MOBILE & RESPONSIVE FIXES
-   Makes content fill any screen width
-═══════════════════════════════════ */
-
-/* All sections fill full viewport width */
-.cover,
-.chapter-divider,
-.dark-band,
-.section,
-.section-full,
-.internal-page {
-  width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
+<style id="snap-to-width">
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: #111;
 }
 
-/* Inner content containers */
-.cover > div,
-.section-full > div,
-.dark-band > div {
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  box-sizing: border-box;
+#snap-scaler {
+  transform-origin: top left;
 }
 
-/* Reduce padding on small screens */
-@media (max-width: 768px) {
-  .section, .section-full {
-    padding: 48px 24px !important;
-  }
-  .cover {
-    padding: 40px 24px !important;
-  }
-  .chapter-divider {
-    padding: 60px 24px !important;
-  }
-  
-  /* Stack grids vertically on mobile */
-  .stat-grid,
-  .feature-grid,
-  .evidence-grid,
-  .one-grid,
-  .two-col {
-    grid-template-columns: 1fr !important;
-  }
-  
-  /* Scale down large fonts */
-  .cover-title {
-    font-size: clamp(48px, 15vw, 120px) !important;
-  }
-  .chapter-divider span {
-    font-size: clamp(36px, 12vw, 96px) !important;
-  }
-  
-  /* Cover meta — stack vertically */
-  .cover-meta {
-    flex-direction: column !important;
-    gap: 12px !important;
-  }
+#snap-scaler img {
+  max-width: 100%;
+  height: auto;
+}
+
+.internal-footer-bar {
+  position: fixed !important;
+  bottom: 0; left: 0; right: 0;
+  z-index: 9999;
+}
+
+@media print {
+  #snap-scaler { transform: none !important; width: 100% !important; }
+  .internal-footer-bar { display: none !important; }
+  html, body { background: white; }
 }
 </style>
 
+<script id="snap-js">
+(function () {
 
-<style id="image-responsive-fix">
-/* ═══════════════════════════════════
-   MAKE ALL IMAGES RESPONSIVE
-═══════════════════════════════════ */
-img {
-  max-width: 100% !important;
-  height: auto !important;
-  display: block;
-}
+  // Measure the natural scrollWidth of the body BEFORE scaling,
+  // i.e. the true pixel width the design was built for.
+  // We do this AFTER fonts load so it's accurate.
+  var measured = false;
+  var DESIGN_WIDTH = 0;
 
-/* Fix any inline width/height on img tags */
-.chapter-header img,
-.feature-card img,
-.two-col img,
-section img,
-div img {
-  max-width: 100% !important;
-  width: auto !important;
-  height: auto !important;
-}
+  function applyScale() {
+    var scaler = document.getElementById('snap-scaler');
+    if (!scaler) return;
 
-@media (max-width: 768px) {
-  img {
-    max-width: 100% !important;
-    width: auto !important;
-    height: auto !important;
+    // First call: measure natural width of the unwrapped content
+    if (!measured) {
+      scaler.style.transform = 'none';
+      scaler.style.width     = 'auto';
+      DESIGN_WIDTH = scaler.scrollWidth || scaler.offsetWidth || 1360;
+      measured = true;
+    }
+
+    var viewW = window.innerWidth
+             || document.documentElement.clientWidth
+             || 360;
+
+    var scale = viewW / DESIGN_WIDTH;
+
+    scaler.style.width     = DESIGN_WIDTH + 'px';
+    scaler.style.transform = 'scale(' + scale + ')';
+
+    // Fix body height so page scrolls correctly
+    var scaledH = scaler.scrollHeight * scale;
+    document.body.style.height = scaledH + 'px';
   }
-  
-  /* Stack two-column layouts with images */
-  .two-col {
-    flex-direction: column !important;
-    grid-template-columns: 1fr !important;
+
+  function wrapBody() {
+    var body   = document.body;
+    var scaler = document.createElement('div');
+    scaler.id  = 'snap-scaler';
+    while (body.firstChild) {
+      scaler.appendChild(body.firstChild);
+    }
+    body.appendChild(scaler);
   }
-  
-  /* Ensure image containers don't overflow */
-  [style*="width"] img {
-    max-width: 100% !important;
-  }
-}
-</style>
+
+  document.addEventListener('DOMContentLoaded', function () {
+    wrapBody();
+    // Wait for fonts (Bebas Neue etc.) before measuring
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () {
+        applyScale();
+      });
+    } else {
+      setTimeout(applyScale, 300);
+    }
+    window.addEventListener('resize', function () {
+      measured = false; // re-measure after resize
+      applyScale();
+    });
+    window.addEventListener('orientationchange', function () {
+      measured = false;
+      setTimeout(applyScale, 200);
+    });
+  });
+
+}());
+</script>
 
 </head>
 <body>
